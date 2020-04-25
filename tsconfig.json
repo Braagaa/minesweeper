@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+	"outDir": "./public/",
+	"sourceMap": true,
+	"strict": true,
+    "target": "es5",
+	"module": "commonjs", 
+    "strict": true,
+	"jsx": "react",
+    "esModuleInterop": true,                  
+    "forceConsistentCasingInFileNames": true 
+  }
+}
