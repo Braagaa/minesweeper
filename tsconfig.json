@@ -1,4 +1,7 @@
 {
+  "include": [
+	"./src/globals/*.d.ts"
+  ],
   "compilerOptions": {
 	"outDir": "./public/",
 	"sourceMap": true,
