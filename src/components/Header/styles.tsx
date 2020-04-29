@@ -17,6 +17,7 @@ export const InputWrapper = styled.div`
 	width: 490px;
 	order: 3;
 	display: flex;
+	margin-left: auto;
 
 	div {
 		margin: auto 0;
@@ -25,6 +26,7 @@ export const InputWrapper = styled.div`
 
 	@media (min-width: 845px) {
 		order: 2;
+		margin-left: 0;
 	}
 `;
 
