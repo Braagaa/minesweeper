@@ -35,6 +35,10 @@ module.exports = {
 				loader: 'file-loader',
 			},
 			{
+				test: /\.svg$/,
+				use: ['@svgr/webpack']
+			},
+			{
 				test: /\.ts(x?)$/,
 				exclude: /node_modules/,
 				use: [{loader: "ts-loader"}]
