@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import baseStyles from '../../baseStyles/';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.header`
 	background: ${baseStyles.colors.black};
 	width: 100%;
 	display: flex;

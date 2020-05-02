@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import baseStyles from '../../baseStyles/';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.footer`
 	color: ${baseStyles.colors.gray.dark};
 	svg {
 		transition: fill 0.15s ease-in;

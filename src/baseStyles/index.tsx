@@ -1,4 +1,5 @@
 type CSSColor = string;
+type Pixel = string;
 
 interface Colors {
 	red: CSSColor;
@@ -11,8 +12,15 @@ interface Colors {
 	}
 }
 
+interface BlockCSS {
+	width: Pixel;
+	height: Pixel;
+}
+
+
 interface BaseStyles {
 	colors: Colors;
+	block: BlockCSS;
 }
 
 const baseStyles: BaseStyles = {
@@ -25,6 +33,10 @@ const baseStyles: BaseStyles = {
 			light: '#DFDFDF',
 			dark: '#ACACAC'
 		}
+	},
+	block: {
+		width: '20px',
+		height: '20px'
 	}
 };
 
