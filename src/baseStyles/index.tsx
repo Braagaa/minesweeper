@@ -9,6 +9,7 @@ interface Colors {
 		base: CSSColor;
 		light: CSSColor;
 		dark: CSSColor;
+		darker: CSSColor;
 	}
 }
 
@@ -31,7 +32,8 @@ const baseStyles: BaseStyles = {
 		gray: {
 			base: '#C6C6C6',
 			light: '#DFDFDF',
-			dark: '#ACACAC'
+			dark: '#ACACAC',
+			darker: 'dimgray'
 		}
 	},
 	block: {
