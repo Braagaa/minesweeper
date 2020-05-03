@@ -7,6 +7,7 @@ export const Wrapper = styled.header`
 	display: flex;
 	flex-wrap: wrap;
 	padding: 0 10px 20px;
+	margin-bottom: 10px;
 
 	@media (min-width: 845px) {
 		padding-bottom: 0;
