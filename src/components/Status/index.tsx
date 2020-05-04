@@ -13,7 +13,7 @@ const Status = function() {
 				width="25px" 
 				height="25px"
 			/>
-			<Span>&nbsp;{data.initalGameState.mines}</Span>
+			<Span>&nbsp;{data.mines.initial}</Span>
 		</Wrapper>	
 	);
 };

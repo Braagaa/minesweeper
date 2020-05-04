@@ -1,19 +1,33 @@
-interface InitalGameState {
-	width: number;
-	height: number;
-	mines: number;
+type GameProps = 'width' | 'height' | 'mines';
+
+interface Clamp {
+	readonly initial: number;
+	readonly min: number;
+	readonly max: number;
 }
 
-interface Data {
-	initalGameState: InitalGameState;
+type GameData<T extends string> = {
+	[P in T]: Clamp;
 }
 
-const data: Data = {
-	initalGameState: {
-		width: 16,
-		height: 16,
-		mines: 40
-	}
+const width: Clamp = {
+	initial: 16,
+	min: 9,
+	max: 24
 };
+
+const height: Clamp = {
+	initial: 16,
+	min: 9,
+	max: 30
+};
+
+const mines: Clamp = {
+	initial: 40,
+	min: 10,
+	max: 668
+};
+
+const data: GameData<GameProps> = {width, height, mines};
 
 export default data;

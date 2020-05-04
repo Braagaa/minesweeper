@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React  from 'react';
 import styled from 'styled-components';
 
 import {Wrapper, InputWrapper, Title, Button} from './styles';
@@ -14,15 +14,21 @@ const Header = function() {
 			<InputWrapper>
 				<Input 
 					text="width" 
-					value={data.initalGameState.width}
+					min={data.width.min}
+					max={data.width.max}
+					value={data.width.initial}
 				/>
 				<Input 
 					text="height" 
-					value={data.initalGameState.height}
+					min={data.height.min}
+					max={data.height.max}
+					value={data.height.initial}
 				/>
 				<Input 
 					text="mines" 
-					value={data.initalGameState.mines}
+					min={data.mines.min}
+					max={data.mines.max}
+					value={data.mines.initial}
 				/>
 			</InputWrapper>
 			<Button>New game</Button>

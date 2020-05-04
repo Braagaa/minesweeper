@@ -4,7 +4,7 @@ import data from '../../data/';
 import Block from '../Block/';
 import {Wrapper} from './styles';
 
-const {initalGameState} = data;
+const {width, height} = data;
 
 const createGridBlock = function(_: string, i: number) {
 	return (
@@ -15,11 +15,11 @@ const createGridBlock = function(_: string, i: number) {
 const Grid = function() {
 	return (
 		<Wrapper 
-			width={initalGameState.width} 
-			height={initalGameState.height}
+			width={width.initial} 
+			height={height.initial}
 		>
 			{
-				''.padStart(initalGameState.width * initalGameState.height, '0')
+				''.padStart(width.initial * height.initial, '0')
 					.split('')
 					.map(createGridBlock)
 			}
