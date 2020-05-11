@@ -1,4 +1,4 @@
-type GameProps = 'width' | 'height' | 'mines';
+export type GameProps = 'width' | 'height' | 'mines';
 
 interface Clamp {
 	readonly initial: number;
@@ -25,7 +25,7 @@ const height: Clamp = {
 const mines: Clamp = {
 	initial: 40,
 	min: 10,
-	max: 668
+	max: 648
 };
 
 const data: GameData<GameProps> = {width, height, mines};

@@ -18,7 +18,6 @@ interface BlockCSS {
 	height: Pixel;
 }
 
-
 interface BaseStyles {
 	colors: Colors;
 	block: BlockCSS;
