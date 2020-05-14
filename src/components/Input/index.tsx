@@ -1,30 +1,48 @@
-import React, {useState} from 'react';
-import {Wrapper, Input as I, Label} from './styles';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
 import StringBuilder from '../../utils/StringBuilder';
+import {AppState} from '../../rootReducer';
+import {createInput, writeInput, WriteInputAction} from './actions';
+import {InputState} from './reducer';
+
+import {Wrapper, Input as I, Label} from './styles';
 
 interface Props {
 	text: string;
 	min: number;
 	max: number;
 	value: number;
+	createInput: typeof createInput;
+	writeInput: typeof writeInput;
+	inputs: InputState;
 	margin?: string;
 }
 
-const Input: React.FC<Props> = function({text, min, max, value, margin}: Props) {
-	const [currentValue, setCurrentValue] = useState<string>(value.toString());
+const mapStateToProps = (state: AppState) => ({
+	inputs: state.inputs
+});
+const mapDispatchToProps = {createInput, writeInput};
+
+const Input: React.FC<Props> = function({text, min, max, value, createInput, writeInput, inputs, margin}: Props) {
 	const id = new StringBuilder(text).toLowerCase().firstWord();
 	const newText = id.capitalize().concat(':');
 
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => 
-		setCurrentValue(e.currentTarget.value);
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>): WriteInputAction =>
+		writeInput(text, e.currentTarget.value);
 
 	const onBlur = (e: React.FocusEvent<HTMLInputElement>): void => {
-		if (e.currentTarget.value === '') return setCurrentValue(value.toString());
-		const newValue = parseInt(e.currentTarget.value);
-
-		if (newValue < min) return setCurrentValue(min.toString());
-		if (newValue > max) return setCurrentValue(max.toString());
+		if (e.currentTarget.value === '') {
+			writeInput(text, value.toString());
+		} else {
+			const newValue = parseInt(e.currentTarget.value);
+			if (newValue < min) writeInput(text, min.toString());
+			if (newValue > max) writeInput(text, max.toString());
+		}
 	};
+
+	useEffect(() => {
+		createInput(text, value.toString());
+	}, []);
 
 	return (
 		<Wrapper margin={margin}>
@@ -34,7 +52,7 @@ const Input: React.FC<Props> = function({text, min, max, value, margin}: Props) 
 				type="number" 
 				min={min}
 				max={max}
-				value={currentValue}
+				value={inputs[text] || value}
 				onChange={onChange}
 				onBlur={onBlur}
 			/>
@@ -42,4 +60,7 @@ const Input: React.FC<Props> = function({text, min, max, value, margin}: Props) 
 	);
 };
 
-export default Input; 
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Input);

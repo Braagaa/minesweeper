@@ -1,4 +1,6 @@
 import React from 'react';
+import {Provider} from 'react-redux';
+import store from '../store/';
 
 import {GlobalStyle} from '../styles';
 import {Wrapper} from './styles';
@@ -8,12 +10,14 @@ import Footer from './Footer/';
 
 const App = function() {
 	return (
-		<Wrapper>
-			<GlobalStyle/>
-			<Header/>
-			<Board/>
-			<Footer/>
-		</Wrapper>
+		<Provider store={store}>
+			<Wrapper>
+				<GlobalStyle/>
+				<Header/>
+				<Board/>
+				<Footer/>
+			</Wrapper>
+		</Provider>
 	);
 }
 

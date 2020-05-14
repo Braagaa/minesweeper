@@ -12,7 +12,7 @@ export const Label = styled.label`
 
 export const Input = styled.input`
 	background: ${baseStyles.colors.white};
-	color: ${baseStyles.colors.black};
+	color: ${baseStyles.colors.black.base};
 	border-radius: 5px;
 	outline: none;
 	text-align: center;

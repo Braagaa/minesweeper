@@ -1,7 +1,6 @@
 type FirstParam<F extends (...args: any) => any> = Parameters<F>[0];
 type TupleMap<F extends (...args: any[]) => any> = (args: FirstParam<F>, i?: number, arr?: FirstParam<F>[]) => any;
-type ArrayT<T> = T extends (infer A)[] ? A[] : never;
-type Array2D<T> = T extends (infer A)[][] ? A : never;
+type ArrayT<T> = T extends (infer A)[] ? A : never;
 
 export const tupleMap = function<F extends TupleMap<F>>(fn: F) {
 	return function(arr: FirstParam<F>[]) {
@@ -14,8 +13,8 @@ export const tupleMap = function<F extends TupleMap<F>>(fn: F) {
 }
 
 export const drop = function(k: number) {
-	return function<T extends any[]>(a: T): ArrayT<T> {
-		return [...a.slice(0, k), ...a.slice(k + 1)] as ArrayT<T>;
+	return function<T extends any[]>(a: T): ArrayT<T>[] {
+		return [...a.slice(0, k), ...a.slice(k + 1)];
 	}
 }
 

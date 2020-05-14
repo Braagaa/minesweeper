@@ -1,5 +1,5 @@
 import Grid from '../Grid';
-import Block, {BlockID, Types, MineBlock} from '../Block';
+import Block, {BlockID, MineBlock} from '../Block';
 import gameData from '../../data/';
 
 const {width, height, mines} = gameData;
@@ -13,16 +13,16 @@ describe('Grid Class', () => {
 
 		expect(grid.width).toBe(width.initial);
 		expect(grid.height).toBe(height.initial);
-		expect(grid.mines).toBe(mines.initial);
+		expect(grid.numMines).toBe(mines.initial);
 
 		expect(grid1.width).toBe(width.min);
 		expect(grid1.height).toBe(height.min);
-		expect(grid1.mines).toBe(mines.min);
+		expect(grid1.numMines).toBe(mines.min);
 
 		expect(grid2.width).toBe(width.max);
 		expect(grid2.height).toBe(height.max);
-		expect(grid2.mines).toBe(mines.max);
-		expect(grid3.mines).toBe(72);
+		expect(grid2.numMines).toBe(mines.max);
+		expect(grid3.numMines).toBe(72);
 	});
 
 	it('Creates a grid', () => {
@@ -34,7 +34,5 @@ describe('Grid Class', () => {
 		expect(grid.grid[0].length).toBe(9);
 
 		expect(grid.grid.reduce(findMines, []).length).toBe(10);
-
-		console.log(grid.grid);
 	});
 });

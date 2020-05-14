@@ -9,11 +9,11 @@ export default class Grid {
 	constructor(
 		public readonly width: number = gameData.width.initial, 
 		public readonly height: number = gameData.height.initial,
-		public readonly mines: number = gameData.mines.initial
+		public readonly numMines: number = gameData.mines.initial
 	) {
 		this.width = this.checkRanges('width', width);
 		this.height = this.checkRanges('height', height);
-		this.mines = this.checkMines(mines);
+		this.numMines = this.checkMines(numMines);
 		this.createGrid();
 		this.placeMines();
 		this.placeNumbers();
@@ -30,12 +30,12 @@ export default class Grid {
 	 * Calculates max mines available to a Grid based on width and height.
 	 * The mines parameter in the constructor changes if it is too high.
 	 */
-	private checkMines(mines: number): number {
+	private checkMines(numMines: number): number {
 		const maxMines = Math.floor(this.width * this.height * 0.9);
-		return mines < gameData.mines.min ?
+		return numMines < gameData.mines.min ?
 			gameData.mines.min :
-			mines > maxMines ?
-			maxMines : mines;
+			numMines > maxMines ?
+			maxMines : numMines;
 	}
 
 	private checkNeighbourInBound(id: BlockID): boolean {
@@ -61,7 +61,7 @@ export default class Grid {
 	private placeMines(): void {
 		const mineLocations = selectRandom2D(
 			this.grid.map(h => h.map(b => b.id)), 
-			this.mines
+			this.numMines
 		);
 
 		mineLocations
@@ -79,8 +79,7 @@ export default class Grid {
 		const findNumberOfMines = (block: Block): [BlockID, number] =>
 			[block.id, this.findNeighbours(block.id).filter(complement(noMines)).length];
 
-		const mineLocations = this.grid
-			.reduce(findAllMines, [])
+		this.grid.reduce(findAllMines, [])
 			.reduce(findNeighboursOfMines, [])
 			.filter(noMines)
 			.map(findNumberOfMines)

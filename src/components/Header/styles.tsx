@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import baseStyles from '../../baseStyles/';
 
 export const Wrapper = styled.header`
-	background: ${baseStyles.colors.black};
+	background: ${baseStyles.colors.black.base};
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;

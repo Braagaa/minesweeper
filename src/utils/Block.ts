@@ -1,4 +1,4 @@
-export type BlockID = [number, number];
+export type BlockID = [number, number]
 
 export enum Statuses {
 	UNREVEALED,
@@ -7,16 +7,11 @@ export enum Statuses {
 	QUESTIONED
 }
 
-export enum Types {
-	NULL,
-	NUMBER,
-	MINE
-}
-
 export default abstract class Block {
     private _status: Statuses = Statuses.UNREVEALED;
+	public discriminator = 'Block';
 
-    constructor(public readonly id: BlockID) { }
+    constructor(public readonly id: BlockID) {}
 
     public get status(): Statuses {
         return this._status;
@@ -29,8 +24,8 @@ export default abstract class Block {
     }
 }
 
-export class NullBlock extends Block {};
-export class MineBlock extends Block {};
+export class NullBlock extends Block {}
+export class MineBlock extends Block {}
 
 export class NumberBlock extends Block {
 	constructor(
@@ -39,4 +34,4 @@ export class NumberBlock extends Block {
 	) {
 		super(id);
 	}
-};
+}

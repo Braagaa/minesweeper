@@ -31,7 +31,7 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(ttf)$/,
+				test: /\.(ttf|png)$/,
 				loader: 'file-loader',
 			},
 			{

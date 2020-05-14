@@ -4,7 +4,10 @@ type Pixel = string;
 interface Colors {
 	red: CSSColor;
 	white: CSSColor;
-	black: CSSColor;
+	black: {
+		base: CSSColor;
+		light: CSSColor;
+	}
 	gray: {
 		base: CSSColor;
 		light: CSSColor;
@@ -27,7 +30,10 @@ const baseStyles: BaseStyles = {
 	colors: {
 		red: '#FE2E2E',
 		white: 'snow',
-		black: '#191919',
+		black: {
+			base: '#191919',
+			light: '#323232'
+		},
 		gray: {
 			base: '#C6C6C6',
 			light: '#DFDFDF',

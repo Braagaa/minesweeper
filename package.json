@@ -54,6 +54,10 @@
       "node": true,
       "es6": true
     },
+	"rules": {
+		"no-redeclare": "off",
+		"no-prototype-builtins": "off"
+	},
     "settings": {
       "react": {
         "version": "detect"

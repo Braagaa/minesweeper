@@ -1,13 +1,23 @@
-import React  from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import {connect} from 'react-redux';
+import {AppState} from '../../rootReducer';
+import {createGame, CreateGameAction} from '../Board/actions';
 
 import {Wrapper, InputWrapper, Title, Button} from './styles';
 import Input from '../Input/';
 
-//Use redux here for later instead of this
 import data from '../../data/';
 
-const Header = function() {
+const mapStateToProps = () => ({});
+const mapDispatchToProps = {createGame};
+
+interface Props {
+	createGame: typeof createGame;
+}
+
+const Header: React.FC<Props> = function({createGame}: Props) {
+	console.log(createGame);
 	return (
 		<Wrapper>
 			<Title>MineSweeper</Title>
@@ -36,4 +46,7 @@ const Header = function() {
 	);
 };
 
-export default Header;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(Header);
