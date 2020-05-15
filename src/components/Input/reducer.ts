@@ -9,7 +9,6 @@ export interface InputState {
 export const initialState: InputState = {};
 
 export default function(state: InputState = initialState, action: ReducerActions): InputState {
-	console.log(action.type);
 	switch (action.type) {
 		case InputActions.CREATE_INPUT:
 			return {...state, [action.payload.key]: action.payload.value};

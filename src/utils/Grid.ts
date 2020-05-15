@@ -11,15 +11,19 @@ export default class Grid {
 		public readonly height: number = gameData.height.initial,
 		public readonly numMines: number = gameData.mines.initial
 	) {
-		this.width = this.checkRanges('width', width);
-		this.height = this.checkRanges('height', height);
+		this.width = Grid.checkRanges('width', width);
+		this.height = Grid.checkRanges('height', height);
 		this.numMines = this.checkMines(numMines);
 		this.createGrid();
 		this.placeMines();
 		this.placeNumbers();
 	}
 
-	private checkRanges(key: 'width' | 'height', measure: number): number {
+	public static calculateMaxMines(width: number, height: number): number {
+		return Math.floor(width * height * 0.9);
+	}
+
+	public static checkRanges(key: 'width' | 'height', measure: number): number {
 		return measure < gameData[key].min ?
 			gameData[key].min :
 			measure > gameData[key].max ?
@@ -31,7 +35,7 @@ export default class Grid {
 	 * The mines parameter in the constructor changes if it is too high.
 	 */
 	private checkMines(numMines: number): number {
-		const maxMines = Math.floor(this.width * this.height * 0.9);
+		const maxMines = Grid.calculateMaxMines(this.width, this.height);
 		return numMines < gameData.mines.min ?
 			gameData.mines.min :
 			numMines > maxMines ?

@@ -6,18 +6,29 @@ import {createGame, CreateGameAction} from '../Board/actions';
 
 import {Wrapper, InputWrapper, Title, Button} from './styles';
 import Input from '../Input/';
+import MineInput from '../MineInput/';
 
-import data from '../../data/';
+import data, {GameProps} from '../../data/';
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: AppState) => ({
+	inputs: state.inputs
+});
 const mapDispatchToProps = {createGame};
 
 interface Props {
 	createGame: typeof createGame;
+	inputs: {[key: string]: string};
 }
 
-const Header: React.FC<Props> = function({createGame}: Props) {
-	console.log(createGame);
+const Header: React.FC<Props> = function({createGame, inputs}: Props) {
+	const width = parseInt(inputs.width);
+	const height = parseInt(inputs.height);
+	const mines = parseInt(inputs.mines);
+
+	const onClickButton = (): void => {
+		createGame(width, height, mines);
+	};
+
 	return (
 		<Wrapper>
 			<Title>MineSweeper</Title>
@@ -26,22 +37,19 @@ const Header: React.FC<Props> = function({createGame}: Props) {
 					text="width" 
 					min={data.width.min}
 					max={data.width.max}
-					value={data.width.initial}
+					defaultValue={data.width.initial}
+					value={width}
 				/>
 				<Input 
 					text="height" 
 					min={data.height.min}
 					max={data.height.max}
-					value={data.height.initial}
+					defaultValue={data.height.initial}
+					value={height}
 				/>
-				<Input 
-					text="mines" 
-					min={data.mines.min}
-					max={data.mines.max}
-					value={data.mines.initial}
-				/>
+				<MineInput width={width} height={height} mines={mines}/>
 			</InputWrapper>
-			<Button>New game</Button>
+			<Button onClick={onClickButton}>New game</Button>
 		</Wrapper>
 	);
 };
