@@ -1,5 +1,5 @@
 import Grid from '../Grid';
-import Block, {BlockID, MineBlock} from '../Block';
+import Block, {BlockID, MineBlock, Statuses} from '../Block';
 import gameData from '../../data/';
 
 const {width, height, mines} = gameData;

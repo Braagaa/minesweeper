@@ -1,30 +1,38 @@
 import React from 'react';
-import data from '../../data/';
+import {connect} from 'react-redux';
+import {AppState} from '../../rootReducer';
+import {IMineSweeper} from '../../utils/MineSweeper';
+import Block from '../../utils/Block';
 
-import Block from '../Block/';
-import {Wrapper} from './styles';
+import BlockComponent from '../Block/';
+import {gridCSS} from './styles';
 
-const {width, height} = data;
+const mapStateToProps = (state: AppState) => ({
+	mineSweeper: state.game.mineSweeper
+});
+const mapDispatchToProps = {};
 
-const createGridBlock = function(_: string, i: number) {
+const createGridBlock = function(block: Block) {
 	return (
-		<Block key={i}/>
+		<BlockComponent key={block.id.toString()} block={block}/>
 	);
 };
 
-const Grid = function() {
+interface Props {
+	mineSweeper: IMineSweeper;
+}
+
+const GridComponent = function({mineSweeper}: Props) {
 	return (
-		<Wrapper 
-			width={width.initial} 
-			height={height.initial}
-		>
+		<div style={gridCSS(mineSweeper.grid.width, mineSweeper.grid.height)}>
 			{
-				''.padStart(width.initial * height.initial, '0')
-					.split('')
-					.map(createGridBlock)
+				mineSweeper.grid.toArray().map(createGridBlock)
 			}
-		</Wrapper>
+		</div>
 	);
 };
 
-export default Grid;
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(GridComponent);

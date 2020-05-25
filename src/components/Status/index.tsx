@@ -1,11 +1,14 @@
 import React from 'react';
-import data from '../../data/';
 import baseStyles from '../../baseStyles/';
 
 import BombSVG from '../../images/bomb.svg';
 import {Wrapper, Span} from './styles';
 
-const Status = function() {
+interface Props {
+	numMines: number;
+}
+
+const Status = function({numMines}: Props) {
 	return (
 		<Wrapper>
 			<BombSVG 
@@ -13,7 +16,7 @@ const Status = function() {
 				width="25px" 
 				height="25px"
 			/>
-			<Span>&nbsp;{data.mines.initial}</Span>
+			<Span>&nbsp;{numMines}</Span>
 		</Wrapper>	
 	);
 };

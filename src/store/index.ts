@@ -1,7 +1,7 @@
 import {createStore} from 'redux';
 import rootReducer, {AppState} from '../rootReducer';
 import Block from '../utils/Block';
-import Grid from '../utils/grid';
+import MineSweeper from '../utils/MineSweeper';
 import {initialState as initialGameState} from '../components/Board/reducer';
 import {initialState as initialInputsState} from '../components/Input/reducer';
 
@@ -26,7 +26,7 @@ const load = (): AppState => {
 			...initialState,
 			game: {
 				isPlaying: true,
-				grid: new Grid()
+				mineSweeper: new MineSweeper()
 			}
 		};
 	}

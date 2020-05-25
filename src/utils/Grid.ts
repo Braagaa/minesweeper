@@ -1,10 +1,29 @@
 import Block, {BlockID, Statuses, NullBlock, MineBlock, NumberBlock} from './Block';
-import {complement} from './func';
+import {complement, accumulate} from './func';
 import {selectRandom2D} from './random';
-import gameData from '../data/';
+import gameData, {GameProps} from '../data/';
 
-export default class Grid {
-	public grid: Block[][] = [];
+export interface IGrid {
+	readonly width: number;
+	readonly height: number;
+	readonly numMines: number;
+	readonly grid: Block[][];
+	toArray: () => Block[];
+}
+
+export class NullGrid implements IGrid {
+	public readonly grid: Block[][] = [];
+	public readonly width: number = 0;
+	public readonly height: number = 0;
+	public readonly numMines: number = 0;
+
+	public toArray(): Block[] {
+		return [];
+	}
+}
+
+export default class Grid implements IGrid {
+	public readonly grid: Block[][] = [];
 
 	constructor(
 		public readonly width: number = gameData.width.initial, 
@@ -101,5 +120,9 @@ export default class Grid {
 				this.grid[height][width] = new NullBlock([height, width]);
 			}
 		}
+	}
+
+	public toArray(): Block[] {
+		return this.grid.reduce(accumulate, []);
 	}
 }

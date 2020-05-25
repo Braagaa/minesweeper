@@ -1,0 +1,40 @@
+:root {
+	--gray-dark: #ACACAC;
+	--black-base: #191919;
+	--black-light: #323232;
+	--white: snow;
+}
+
+.block {
+	width: 20px;
+	height: 20px;
+	border-radius: 3px;
+	border: 1px solid var(--gray-dark);
+	cursor: pointer;
+}
+
+.block__unrevealed {
+	background: var(--gray-dark);
+	transition: background 0.15s ease-out;
+}
+.block__unrevealed:hover {
+	background: var(--black-base);
+}
+
+.block__null {
+	background: var(--white);
+}
+
+.block__number {
+	background: var(--black-light);
+	position: relative;
+}
+
+.number__text {
+	text-align: center;
+	color: var(--white);
+	position: absolute;
+	top: -5px;
+	left: 0;
+	right: 0;
+}

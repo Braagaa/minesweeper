@@ -8,17 +8,19 @@ import {Wrapper} from './styles';
 import Start from '../Start/';
 
 const mapStateToProps = (state: AppState) => ({
-	isPlaying: state.game.isPlaying
+	isPlaying: state.game.isPlaying,
+	numMines: state.game.mineSweeper.grid.numMines
 });
 
 interface Props {
-	isPlaying: Boolean;
+	isPlaying: boolean;
+	numMines: number;
 }
 
-const Board: React.FC<Props> = function({isPlaying}: Props) {
+const Board: React.FC<Props> = function({isPlaying, numMines}: Props) {
 	return isPlaying ? (
 		<Wrapper>
-			<Status/>
+			<Status numMines={numMines}/>
 			<Grid/>
 		</Wrapper>
 	) : (

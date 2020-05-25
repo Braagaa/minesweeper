@@ -1,16 +1,16 @@
-import {GameActions, CreateGameAction} from './actions';
-import Grid from '../../utils/grid';
+import {GameActions, CreateGameAction, RevealAction} from './actions';
+import MineSweeper, {NullMineSweeper, IMineSweeper} from '../../utils/MineSweeper';
 
-type ReducerActions = CreateGameAction;
+type ReducerActions = CreateGameAction | RevealAction;
 
 export interface GameState {
 	isPlaying: boolean;
-	grid: Grid | null;
+	mineSweeper: IMineSweeper;
 }
 
 export const initialState: GameState = {
 	isPlaying: false,
-	grid: null
+	mineSweeper: new NullMineSweeper()
 };
 
 export default function(state: GameState = initialState, action: ReducerActions): GameState {
@@ -18,11 +18,16 @@ export default function(state: GameState = initialState, action: ReducerActions)
 		case GameActions.CREATE_GAME:
 			return {
 				isPlaying: true,
-				grid: new Grid(
-					action.payload.width, 
-					action.payload.height, 
-					action.payload.mines
-				)
+				mineSweeper: new MineSweeper({
+					width: action.payload.width, 
+					height: action.payload.height, 
+					numMines: action.payload.mines
+				})
+			};
+		case GameActions.REVEAL:
+			return {
+				...state,
+				mineSweeper: state.mineSweeper.revealBlock(action.payload.id)
 			};
 		default:
 			return state;

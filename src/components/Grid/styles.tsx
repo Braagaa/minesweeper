@@ -3,10 +3,10 @@ import baseStyles from '../../baseStyles/';
 
 const {block} = baseStyles;
 
-export const Wrapper = styled.div<{width: number, height: number}>`
-	display: grid;
-	${props => `grid-template: repeat(${props.height}, ${block.height}) / repeat(${props.width}, ${block.width});`};
-	place-content: center;
-	gap: 2px;
-	opacity: 0.8;
-`;
+export const gridCSS = (width: number, height: number) => ({
+	display: 'grid',
+	gridTemplate: `repeat(${height}, ${block.height}) / repeat(${width}, ${block.width})`,
+	placeContent: 'center',
+	gap: '2px',
+	opacity: '0.8'
+});

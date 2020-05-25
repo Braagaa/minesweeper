@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-server": "webpack-dev-server --mode development --colors",
-	"test": "jest",
+    "test": "jest",
     "build": "webpack --mode production"
   },
   "keywords": [
@@ -22,6 +22,7 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-redux": "^7.1.7",
     "@types/styled-components": "^5.1.0",
+    "css-loader": "^3.5.3",
     "eslint": "^6.8.0",
     "eslint-loader": "^4.0.1",
     "eslint-plugin-react": "^7.19.0",
@@ -29,12 +30,13 @@
     "file-loader": "^6.0.0",
     "jest": "^26.0.1",
     "source-map-loader": "^0.2.4",
+    "style-loader": "^1.2.1",
     "ts-jest": "^25.4.0",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   },
   "eslintConfig": {
     "parserOptions": {
@@ -54,10 +56,10 @@
       "node": true,
       "es6": true
     },
-	"rules": {
-		"no-redeclare": "off",
-		"no-prototype-builtins": "off"
-	},
+    "rules": {
+      "no-redeclare": "off",
+      "no-prototype-builtins": "off"
+    },
     "settings": {
       "react": {
         "version": "detect"
@@ -65,14 +67,16 @@
     }
   },
   "jest": {
-	"roots": ["<rootDir>/src"],
-	"testMatch": [
-		"**/__tests__/**/*.+(ts|tsx|js)",
-		"**/?(*.)+(spec|test).+(ts|tsx|js)"
-	  ],
-	  "transform": {
-		"^.+\\.(ts|tsx)$": "ts-jest"
-	  }
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.+(ts|tsx|js)",
+      "**/?(*.)+(spec|test).+(ts|tsx|js)"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    }
   },
   "dependencies": {
     "react": "^16.13.1",
