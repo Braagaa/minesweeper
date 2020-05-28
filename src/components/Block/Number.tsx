@@ -1,7 +1,6 @@
 import React from 'react';
 import {NumberBlock} from '../../utils/Block';
 
-import {NumberWrapper, NumberText} from './styles';
 import styles from './style.module.css';
 
 interface Props {

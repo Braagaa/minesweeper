@@ -10,7 +10,6 @@ import {gridCSS} from './styles';
 const mapStateToProps = (state: AppState) => ({
 	mineSweeper: state.game.mineSweeper
 });
-const mapDispatchToProps = {};
 
 const createGridBlock = function(block: Block) {
 	return (
@@ -33,6 +32,5 @@ const GridComponent = function({mineSweeper}: Props) {
 };
 
 export default connect(
-	mapStateToProps,
-	mapDispatchToProps
+	mapStateToProps
 )(GridComponent);

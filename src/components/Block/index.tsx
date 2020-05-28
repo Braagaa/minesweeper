@@ -1,9 +1,10 @@
 import React, {memo} from 'react';
-import Block, {Statuses, NullBlock, NumberBlock} from '../../utils/Block';
+import Block, {Statuses, NullBlock, NumberBlock, MineBlock} from '../../utils/Block';
 
 import UnrevealedBlock from './Unrevealed';
 import NullBlockComponent from './Null';
 import NumberBlockComponent from './Number';
+import MineBlockComponent from './Mine';
 
 //images should be -3px of width and height of block
 
@@ -17,7 +18,8 @@ const BlockComponent = function({block}: Props) {
 	}
 
 	const BC = block instanceof NullBlock ?
-		NullBlockComponent : UnrevealedBlock;
+		NullBlockComponent : block instanceof MineBlock ?
+		MineBlockComponent : UnrevealedBlock;
 
 	return block instanceof NumberBlock ? (
 		<NumberBlockComponent block={block}/>

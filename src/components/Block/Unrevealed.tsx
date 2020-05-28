@@ -1,10 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {callTo} from '../../utils/func';
-import Block from '../../utils/Block';
+import Block, {MineBlock} from '../../utils/Block';
 import {revealBlock} from '../Board/actions';
 
-import {UnrevealedWrapper} from './styles';
+import styles from './style.module.css';
 
 const mapStateToProps = () => ({});
 const mapDispatchToProps = {revealBlock};
@@ -15,10 +14,12 @@ interface Props {
 }
 
 const UnrevealedBlock = function({block, revealBlock}: Props) {
-	const onClick = callTo(revealBlock, block.id);
+	const onClick = () => {
+		revealBlock(block.id);
+	};
 
 	return (
-		<UnrevealedWrapper onClick={onClick}/>
+		<div className={`${styles.block} ${styles.block__unrevealed}`} onClick={onClick}/>
 	);
 };
 

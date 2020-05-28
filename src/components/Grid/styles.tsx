@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import baseStyles from '../../baseStyles/';
 
 const {block} = baseStyles;

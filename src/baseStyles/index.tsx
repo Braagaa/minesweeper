@@ -47,4 +47,14 @@ const baseStyles: BaseStyles = {
 	}
 };
 
+export const parsePixel = function(pixel: Pixel): number {
+	if (!pixel.endsWith('px'))
+		throw new Error(`Can only parse Pixel strings: ${pixel}`);
+	return parseInt(pixel);
+};
+
+export const toPixel = function(num: number): Pixel {
+	return `${num}px`;
+}
+
 export default baseStyles;

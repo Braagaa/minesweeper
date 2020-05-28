@@ -3,7 +3,7 @@ import {BlockID} from '../../utils/Block';
 export enum GameActions {
 	CREATE_GAME = "CREATE_GAME",
 	REVEAL = "REVEAL",
-	END_GAME = "END_GAME"
+	LOSE_GAME = "LOSE_GAME"
 }
 
 type Action<T extends GameActions> = {type: T};

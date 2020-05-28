@@ -35,4 +35,12 @@ describe('Grid Class', () => {
 
 		expect(grid.grid.reduce(findMines, []).length).toBe(10);
 	});
+
+	it('Can find all mine blocks', () => {
+		const grid = new Grid(9, 9, 10);
+		const mines = grid.findAllMines()
+			.filter((block: MineBlock) => block instanceof MineBlock);
+
+		expect(mines.length).toBe(10);
+	});
 });

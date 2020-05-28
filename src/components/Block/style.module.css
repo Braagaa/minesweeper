@@ -1,8 +1,21 @@
+@keyframes slow_appear {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
 :root {
 	--gray-dark: #ACACAC;
 	--black-base: #191919;
 	--black-light: #323232;
 	--white: snow;
+	--red: #FE2E2E;
 }
 
 .block {
@@ -37,4 +50,15 @@
 	top: -5px;
 	left: 0;
 	right: 0;
+}
+
+.block__mine {
+	background: var(--red);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	animation-name: slow_appear;
+	animation-duration: 0.2s;
+	animation-timing-function: ease-out;
 }

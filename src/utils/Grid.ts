@@ -3,12 +3,17 @@ import {complement, accumulate} from './func';
 import {selectRandom2D} from './random';
 import gameData, {GameProps} from '../data/';
 
+export type NullNumber = NullBlock | NumberBlock;
+
 export interface IGrid {
 	readonly width: number;
 	readonly height: number;
 	readonly numMines: number;
 	readonly grid: Block[][];
+	validateId: (id: BlockID) => void;
 	toArray: () => Block[];
+	findAllMines: () => MineBlock[];
+	findNeighboursNullNumbers: (id: BlockID) => NullNumber[];
 }
 
 export class NullGrid implements IGrid {
@@ -17,7 +22,19 @@ export class NullGrid implements IGrid {
 	public readonly height: number = 0;
 	public readonly numMines: number = 0;
 
+	public validateId() {
+		return false;
+	}
+
 	public toArray(): Block[] {
+		return [];
+	}
+
+	public findAllMines(): MineBlock[] {
+		return [];
+	}
+
+	public findNeighboursNullNumbers(): NullNumber[] {
 		return [];
 	}
 }
@@ -94,15 +111,13 @@ export default class Grid implements IGrid {
 	}
 
 	private placeNumbers(): void {
-		const findAllMines = (acc: MineBlock[], height: Block[]): MineBlock[] =>
-			[...acc, ...height.filter((block: Block) => block instanceof MineBlock)];
 		const findNeighboursOfMines = (acc: Block[], mineBlock: MineBlock): Block[] =>
 			[...acc, ...this.findNeighbours(mineBlock.id)];
 		const noMines = (block: Block): boolean => !(block instanceof MineBlock);
 		const findNumberOfMines = (block: Block): [BlockID, number] =>
 			[block.id, this.findNeighbours(block.id).filter(complement(noMines)).length];
 
-		this.grid.reduce(findAllMines, [])
+		this.findAllMines()
 			.reduce(findNeighboursOfMines, [])
 			.filter(noMines)
 			.map(findNumberOfMines)
@@ -120,6 +135,37 @@ export default class Grid implements IGrid {
 				this.grid[height][width] = new NullBlock([height, width]);
 			}
 		}
+	}
+
+	public validateId([y,x]: BlockID) {
+		if (!this.grid[y] || !this.grid[y][x])
+			throw new Error(`Invalid BlockID [${y},${x}]`);
+	}
+
+	public findAllMines(): MineBlock[] {
+		return this.grid.reduce((acc: MineBlock[], height: Block[]): MineBlock[] =>
+			[...acc, ...height.filter((block: Block) => block instanceof MineBlock)], []);
+	}
+
+	public findNeighboursNullNumbers([y,x]: BlockID): NullNumber[] {
+		this.validateId([y,x]);
+
+		const foundNullNumbers: NullNumber[] = [];
+		let blocks: Block[] = [this.grid[y][x]];
+
+		while (blocks.length > 0) {
+			const currentBlock = blocks.pop();
+			if (!foundNullNumbers.includes(currentBlock!)) {
+				if (currentBlock instanceof NullBlock) {
+					blocks = [...blocks, ...this.findNeighbours(currentBlock.id)];
+					foundNullNumbers.push(currentBlock);
+				} else if (currentBlock instanceof NumberBlock) {
+					foundNullNumbers.push(currentBlock);
+				} 
+			}
+		}
+
+		return foundNullNumbers;
 	}
 
 	public toArray(): Block[] {

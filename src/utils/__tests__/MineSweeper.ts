@@ -1,5 +1,5 @@
-import MineSweeper from '../MineSweeper';
-import {BlockID, Statuses} from '../Block';
+import MineSweeper, {MineSweeperStatuses} from '../MineSweeper';
+import Block, {BlockID, MineBlock, NullBlock, NumberBlock, Statuses} from '../Block';
 
 describe('MineSweeper Class', () => {
 	it('Instantiates with BlockGrid', () => {
@@ -25,5 +25,21 @@ describe('MineSweeper Class', () => {
 		expect(toError([0,-1])).toThrow();
 		expect(toError([9,0])).toThrow();
 		expect(toError([0,9])).toThrow();
+	});
+
+	it('Will lose the game', () => {
+		const ms = new MineSweeper({width: 9, height: 9, numMines: 10})
+		const mines = ms.grid
+			.toArray()
+			.filter((block: Block) => block instanceof MineBlock);
+
+		const ms1 = ms.revealBlock(mines[0].id);
+			
+		const blocks = ms1.grid
+			.toArray()
+			.filter((block: Block) => !(block instanceof MineBlock) && block.status === Statuses.UNREVEALED);
+
+		expect(ms.status()).toBe(MineSweeperStatuses.LOSE);
+		expect(blocks.length).toBe(9 * 9 - 10);
 	});
 });
