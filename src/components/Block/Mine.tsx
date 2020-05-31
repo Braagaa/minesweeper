@@ -9,7 +9,7 @@ const {block: blockCSS} = baseStyles;
 const Mine = function() {
 	return (
 		<div 
-			className={`${styles.block} ${styles.block__mine}`} 
+			className={`${styles.center} ${styles.block} ${styles.block__mine}`} 
 		>
 			<MineSVG 
 				fill="black"

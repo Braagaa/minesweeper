@@ -155,7 +155,7 @@ export default class Grid implements IGrid {
 
 		while (blocks.length > 0) {
 			const currentBlock = blocks.pop();
-			if (!foundNullNumbers.includes(currentBlock!)) {
+			if (!foundNullNumbers.includes(currentBlock!) && currentBlock!.status === Statuses.UNREVEALED) {
 				if (currentBlock instanceof NullBlock) {
 					blocks = [...blocks, ...this.findNeighbours(currentBlock.id)];
 					foundNullNumbers.push(currentBlock);

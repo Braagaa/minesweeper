@@ -1,5 +1,5 @@
 import Grid, {NullGrid, IGrid}  from './grid';
-import {NullBlock, MineBlock, BlockID, Statuses} from './Block';
+import Block, {NullBlock, MineBlock, BlockID, Statuses} from './Block';
 
 export enum MineSweeperStatuses {
 	PLAYING,
@@ -17,12 +17,24 @@ type Props = MineSweeperProps | MineSweeper;
 export interface IMineSweeper {
 	readonly grid: IGrid;
 	revealBlock: (id: BlockID) => IMineSweeper;
+	flagBlock: (id: BlockID) => IMineSweeper;
+	questionBlock: (id: BlockID) => IMineSweeper;
+	unrevealBlock: (id: BlockID) => IMineSweeper;
 	status: () => MineSweeperStatuses;
 }
 
 export class NullMineSweeper implements IMineSweeper {
 	public readonly grid: IGrid = new NullGrid();
 	public revealBlock(): IMineSweeper {
+		return new NullMineSweeper();
+	}
+	public flagBlock(): IMineSweeper {
+		return new NullMineSweeper();
+	}
+	public questionBlock(): IMineSweeper {
+		return new NullMineSweeper();
+	}
+	public unrevealBlock(): IMineSweeper {
 		return new NullMineSweeper();
 	}
 	public status() {
@@ -52,28 +64,72 @@ export default class MineSweeper implements IMineSweeper {
 
 	private revealNullNumberBlocks(id: BlockID): void {
 		this.grid.findNeighboursNullNumbers(id)
-			.filter(block => block.status === Statuses.UNREVEALED)
 			.forEach(block => block.status = Statuses.REVEALED);
 	}
 
-	public revealBlock(id: BlockID): IMineSweeper {
-		if (this._status !== MineSweeperStatuses.PLAYING) {
+	private checkPlayable(): boolean {
+		return this._status !== MineSweeperStatuses.PLAYING;
+	}
+
+	private getBlock([y,x]: BlockID): Block {
+		this.grid.validateId([y,x]);
+		return this.grid.grid[y][x];
+	}
+
+	private changeBlockStatus(check: Statuses, change: Statuses, id: BlockID): IMineSweeper {
+		if (this.checkPlayable()) {
 			return new MineSweeper(this);
 		}
 
-		this.grid.validateId(id);
-		const [y,x] = id;
-		const block = this.grid.grid[y][x];
+		const block = this.getBlock(id);
+		
+		if (block.status === check) {
+			block.status = change;
+		}
+
+		return new MineSweeper(this);
+	}
+
+	public revealBlock(id: BlockID): IMineSweeper {
+		if (this.checkPlayable()) {
+			return new MineSweeper(this);
+		}
+
+		const block = this.getBlock(id);
 
 		if (block instanceof MineBlock) {
 			this.loseGame();
 		} else if (block instanceof NullBlock) {
 			this.revealNullNumberBlocks(id);
 		} else {
-			this.grid.grid[y][x].status = Statuses.REVEALED;
+			block.status = Statuses.REVEALED;
 		}
 
 		return new MineSweeper(this);
+	}
+
+	public flagBlock(id: BlockID): IMineSweeper {
+		return this.changeBlockStatus(
+			Statuses.UNREVEALED, 
+			Statuses.FLAGGED, 
+			id
+		);
+	}
+
+	public questionBlock(id: BlockID): IMineSweeper {
+		return this.changeBlockStatus(
+			Statuses.FLAGGED,
+			Statuses.QUESTIONED,
+			id
+		);
+	}
+
+	public unrevealBlock(id: BlockID): IMineSweeper {
+		return this.changeBlockStatus(
+			Statuses.QUESTIONED,
+			Statuses.UNREVEALED,
+			id
+		);
 	}
 
 	public status() {

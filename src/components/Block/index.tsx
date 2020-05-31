@@ -2,6 +2,8 @@ import React, {memo} from 'react';
 import Block, {Statuses, NullBlock, NumberBlock, MineBlock} from '../../utils/Block';
 
 import UnrevealedBlock from './Unrevealed';
+import FlagBlockComponent from './Flag';
+import QuestionBlockComponent from './Question';
 import NullBlockComponent from './Null';
 import NumberBlockComponent from './Number';
 import MineBlockComponent from './Mine';
@@ -15,6 +17,14 @@ interface Props {
 const BlockComponent = function({block}: Props) {
 	if (block.status === Statuses.UNREVEALED) {
 		return <UnrevealedBlock block={block}/>;
+	}
+
+	if (block.status === Statuses.FLAGGED) {
+		return <FlagBlockComponent block={block}/>;
+	}
+
+	if (block.status === Statuses.QUESTIONED) {
+		return <QuestionBlockComponent block={block}/>;
 	}
 
 	const BC = block instanceof NullBlock ?

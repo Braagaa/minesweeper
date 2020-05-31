@@ -1,7 +1,14 @@
-import {GameActions, CreateGameAction, RevealAction} from './actions';
+import {
+	GameActions, 
+	CreateGameAction, 
+	RevealAction, 
+	FlagAction, 
+	QuestionAction, 
+	UnrevealAction
+} from './actions';
 import MineSweeper, {NullMineSweeper, IMineSweeper} from '../../utils/MineSweeper';
 
-type ReducerActions = CreateGameAction | RevealAction;
+type ReducerActions = CreateGameAction | RevealAction | FlagAction | QuestionAction | UnrevealAction;
 
 export interface GameState {
 	isPlaying: boolean;
@@ -28,6 +35,21 @@ export default function(state: GameState = initialState, action: ReducerActions)
 			return {
 				...state,
 				mineSweeper: state.mineSweeper.revealBlock(action.payload.id)
+			};
+		case GameActions.FLAG:
+			return {
+				...state,
+				mineSweeper: state.mineSweeper.flagBlock(action.payload.id)
+			};
+		case GameActions.QUESTION:
+			return {
+				...state,
+				mineSweeper: state.mineSweeper.questionBlock(action.payload.id)
+			};
+		case GameActions.UNREVEAL:
+			return {
+				...state,
+				mineSweeper: state.mineSweeper.unrevealBlock(action.payload.id)
 			};
 		default:
 			return state;

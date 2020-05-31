@@ -27,6 +27,15 @@ describe('MineSweeper Class', () => {
 		expect(toError([0,9])).toThrow();
 	});
 
+	it('Flags a Block', () => {
+		const ms = new MineSweeper({width: 9, height: 9, numMines: 10})
+			.flagBlock([0,0]);
+		const toError = (id: BlockID) => () => ms.revealBlock(id)
+
+		expect(ms.grid.grid[0][0].status).toBe(Statuses.FLAGGED);
+		expect(toError([-1,0])).toThrow();
+	});
+
 	it('Will lose the game', () => {
 		const ms = new MineSweeper({width: 9, height: 9, numMines: 10})
 		const mines = ms.grid

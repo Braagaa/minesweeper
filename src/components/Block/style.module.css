@@ -1,11 +1,39 @@
-@keyframes slow_appear {
+@keyframes explosion {
 	from {
 		transform: scale(0);
 		opacity: 0;
 	}
 
+	50% {
+		transform: scale(1.5);
+	}
+
 	to {
 		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes pop {
+	from {
+		transform: scale(0);
+	}
+
+	50% {
+		transform: scale(1.5);
+	}
+
+	100%{
+		transform: scale(1);
+	}
+}
+
+@keyframes opac {
+	from {
+		opacity: 0.5;
+	}
+
+	to {
 		opacity: 1;
 	}
 }
@@ -36,11 +64,17 @@
 
 .block__null {
 	background: var(--white);
+	animation-name: opac;
+	animation-duration: 0.2s;
+	animation-timing-function: ease-out;
 }
 
 .block__number {
 	background: var(--black-light);
 	position: relative;
+	animation-name: opac;
+	animation-duration: 0.2s;
+	animation-timing-function: ease-out;
 }
 
 .number__text {
@@ -52,13 +86,23 @@
 	right: 0;
 }
 
-.block__mine {
-	background: var(--red);
+.center {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.block__mine {
+	background: var(--red);
 	border: none;
-	animation-name: slow_appear;
+	animation-name: explosion;
+	animation-duration: 0.2s;
+	animation-timing-function: ease-out;
+}
+
+.block__flag {
+	border: none;
+	animation-name: pop;
 	animation-duration: 0.2s;
 	animation-timing-function: ease-out;
 }
