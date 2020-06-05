@@ -5,55 +5,13 @@ import gameData, {GameProps} from '../data/';
 
 export type NullNumber = NullBlock | NumberBlock;
 
-export interface IGrid {
-	readonly width: number;
-	readonly height: number;
-	readonly numMines: number;
-	readonly grid: Block[][];
-	validateId: (id: BlockID) => void;
-	toArray: () => Block[];
-	findAllMines: () => MineBlock[];
-	findNeighboursNullNumbers: (id: BlockID) => NullNumber[];
-}
-
-export class NullGrid implements IGrid {
-	public readonly grid: Block[][] = [];
-	public readonly width: number = 0;
-	public readonly height: number = 0;
-	public readonly numMines: number = 0;
-
-	public validateId() {
-		return false;
-	}
-
-	public toArray(): Block[] {
-		return [];
-	}
-
-	public findAllMines(): MineBlock[] {
-		return [];
-	}
-
-	public findNeighboursNullNumbers(): NullNumber[] {
-		return [];
-	}
-}
-
-export default class Grid implements IGrid {
-	public readonly grid: Block[][] = [];
-
+export default abstract class Grid {
 	constructor(
-		public readonly width: number = gameData.width.initial, 
-		public readonly height: number = gameData.height.initial,
-		public readonly numMines: number = gameData.mines.initial
-	) {
-		this.width = Grid.checkRanges('width', width);
-		this.height = Grid.checkRanges('height', height);
-		this.numMines = this.checkMines(numMines);
-		this.createGrid();
-		this.placeMines();
-		this.placeNumbers();
-	}
+		public readonly width: number = 0,
+		public readonly height: number = 0,
+		public readonly numMines: number = 0,
+		protected _grid: Block[][] = []
+	) {}
 
 	public static calculateMaxMines(width: number, height: number): number {
 		return Math.floor(width * height * 0.9);
@@ -70,13 +28,18 @@ export default class Grid implements IGrid {
 	 * Calculates max mines available to a Grid based on width and height.
 	 * The mines parameter in the constructor changes if it is too high.
 	 */
-	private checkMines(numMines: number): number {
-		const maxMines = Grid.calculateMaxMines(this.width, this.height);
+	public static checkMines(width: number, height: number, numMines: number): number {
+		const maxMines = Grid.calculateMaxMines(width, height);
 		return numMines < gameData.mines.min ?
 			gameData.mines.min :
 			numMines > maxMines ?
 			maxMines : numMines;
 	}
+
+	public get grid() {
+		return this._grid;
+	}
+
 
 	private checkNeighbourInBound(id: BlockID): boolean {
 		return id.every(num => num >= 0) &&
@@ -84,7 +47,7 @@ export default class Grid implements IGrid {
 			id[1] < this.width;
 	}
 
-	private findNeighbours([h, w]: BlockID): Block[] {
+	protected findNeighbours([h, w]: BlockID): Block[] {
 		const neighbours: Block[] = [];
 		for (let y = -1; y <= 1; y++) {
 			for (let x = -1; x <= 1; x++) {
@@ -96,45 +59,6 @@ export default class Grid implements IGrid {
 		}
 
 		return neighbours;
-	}
-
-	private placeMines(): void {
-		const mineLocations = selectRandom2D(
-			this.grid.map(h => h.map(b => b.id)), 
-			this.numMines
-		);
-
-		mineLocations
-			.forEach(([y, x]) =>{
-				this.grid[y][x] = new MineBlock([y,x])
-			});
-	}
-
-	private placeNumbers(): void {
-		const findNeighboursOfMines = (acc: Block[], mineBlock: MineBlock): Block[] =>
-			[...acc, ...this.findNeighbours(mineBlock.id)];
-		const noMines = (block: Block): boolean => !(block instanceof MineBlock);
-		const findNumberOfMines = (block: Block): [BlockID, number] =>
-			[block.id, this.findNeighbours(block.id).filter(complement(noMines)).length];
-
-		this.findAllMines()
-			.reduce(findNeighboursOfMines, [])
-			.filter(noMines)
-			.map(findNumberOfMines)
-			.forEach(([id, num]) => {
-				const [y,x] = id;
-				this.grid[y][x] = new NumberBlock(id, num);
-			});
-	}
-
-	private createGrid(): void {
-		for(let height = 0; height < this.height; height++) {
-			this.grid[height] = [];
-
-			for(let width = 0; width < this.width; width++) {
-				this.grid[height][width] = new NullBlock([height, width]);
-			}
-		}
 	}
 
 	public validateId([y,x]: BlockID) {
@@ -170,5 +94,103 @@ export default class Grid implements IGrid {
 
 	public toArray(): Block[] {
 		return this.grid.reduce(accumulate, []);
+	}
+}
+
+export class RandomGrid extends Grid {
+	constructor(
+		public readonly width: number = gameData.width.initial,
+		public readonly height: number = gameData.height.initial,
+		public readonly numMines: number = gameData.mines.initial
+	) {
+		super();
+
+		this.width = Grid.checkRanges('width', width);
+		this.height = Grid.checkRanges('height', height);
+		this.numMines = Grid.checkMines(this.width, this.height, numMines);
+
+		this.createGrid();
+		this.placeMines();
+		this.placeNumbers();
+	}
+
+	private createGrid(): void {
+		for(let height = 0; height < this.height; height++) {
+			this.grid[height] = [];
+
+			for(let width = 0; width < this.width; width++) {
+				this.grid[height][width] = new NullBlock([height, width]);
+			}
+		}
+	}
+
+	private placeMines(): void {
+		const mineLocations = selectRandom2D(
+			this.grid.map(h => h.map(b => b.id)), 
+			this.numMines
+		);
+
+		mineLocations
+			.forEach(([y, x]) =>{
+				this.grid[y][x] = new MineBlock([y,x])
+			});
+	}
+
+	private placeNumbers(): void {
+		const findNeighboursOfMines = (acc: Block[], mineBlock: MineBlock): Block[] =>
+			[...acc, ...this.findNeighbours(mineBlock.id)];
+		const noMines = (block: Block): boolean => !(block instanceof MineBlock);
+		const findNumberOfMines = (block: Block): [BlockID, number] =>
+			[block.id, this.findNeighbours(block.id).filter(complement(noMines)).length];
+
+		this.findAllMines()
+			.reduce(findNeighboursOfMines, [])
+			.filter(noMines)
+			.map(findNumberOfMines)
+			.forEach(([id, num]) => {
+				const [y,x] = id;
+				this.grid[y][x] = new NumberBlock(id, num);
+			});
+	}
+}
+
+export class NullGrid extends Grid {}
+
+export class FixedGrid extends Grid {
+	public readonly width: number = 0;
+	public readonly height: number = 0;
+	public readonly numMines: number = 0;
+
+	constructor(
+		grid: Block[][],
+	) {
+		super(0,0,0,grid);
+
+		this.width = grid[0].length;
+		this.height = grid.length;
+		this.numMines = this.findAllMines().length;
+
+		this.validateDimensions();
+		this.validateMines();
+	}
+
+	private validateDimensions() {
+		const dimensions = this.grid
+			.map((width: Block[]) => width.length)
+			.reduce((acc: Set<number>, length: number) => acc.add(length), new Set());
+
+		if (dimensions.size === 0 || dimensions.size > 1)
+			throw new Error('Given grid is invalid');
+		if (this.grid.length < gameData.height.min || this.grid.length > gameData.height.max)
+			throw new Error(`Grid height is invalid. Must be between ${gameData.height.min} - ${gameData.height.max}`);
+		if (this.grid[0].length < gameData.width.min || this.grid.length > gameData.width.max)
+			throw new Error(`Grid width is invalid. Must be between ${gameData.width.min} - ${gameData.width.max}`);
+	}
+
+	private validateMines() {
+		if (this.numMines < gameData.mines.min) 
+			throw new Error(`${this.numMines} is below the minimum amount of mines.`);
+		if (this.numMines > Grid.calculateMaxMines(this.width, this.height))
+			throw new Error(`${this.numMines} is above the maximum amount of mines.`);
 	}
 }

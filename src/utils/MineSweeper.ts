@@ -1,4 +1,4 @@
-import Grid, {NullGrid, IGrid}  from './grid';
+import Grid, {NullGrid, RandomGrid}  from './grid';
 import Block, {NullBlock, NumberBlock, MineBlock, BlockID, Statuses, BlockJSON} from './Block';
 import gameData from '../data/';
 
@@ -22,7 +22,7 @@ interface MineSweeperJSONProps {
 type Props = MineSweeperProps | MineSweeper;
 
 export interface IMineSweeper {
-	readonly grid: IGrid;
+	readonly grid: Grid;
 	revealBlock: (id: BlockID) => IMineSweeper;
 	flagBlock: (id: BlockID) => IMineSweeper;
 	questionBlock: (id: BlockID) => IMineSweeper;
@@ -32,7 +32,7 @@ export interface IMineSweeper {
 }
 
 export class NullMineSweeper implements IMineSweeper {
-	public readonly grid: IGrid = new NullGrid();
+	public readonly grid: Grid = new NullGrid();
 	public revealBlock(): IMineSweeper {
 		return new NullMineSweeper();
 	}
@@ -52,36 +52,9 @@ export class NullMineSweeper implements IMineSweeper {
 		return 0;
 	}
 }
-
+/*
 export class MineSweeperJSON {
 	public readonly grid: BlockJSON[][];
-
-	constructor({mines, status, grid}: MineSweeperJSONProps) {
-		this.checkMines(grid[0].length, grid.length, mines.length);
-		this.checkDimensions(grid);
-		this.grid = grid;
-	}
-
-	private checkDimensions(grid: BlockJSON[][]) {
-		const dimensions = grid
-			.map((width: BlockJSON[]) => width.length)
-			.reduce((acc: Set<number>, length: number) => acc.add(length), new Set());
-
-		if (dimensions.size === 0 || dimensions.size > 1)
-			throw new Error('Given grid is invalid');
-		if (grid.length < gameData.height.min || grid.length > gameData.height.max)
-			throw new Error(`Grid height is invalid. Must be between ${gameData.height.max} - ${gameData.height.max}`);
-		if (grid[0].length < gameData.width.min || grid.length > gameData.width.max)
-			throw new Error(`Grid width is invalid. Must be between ${gameData.width.max} - ${gameData.width.max}`);
-	}
-
-	private checkMines(width: number, height: number, numMines: number) {
-		if (numMines < gameData.mines.min) 
-			throw new Error(`${numMines} is below the minimum amount of mines.`);
-		if (numMines > Grid.calculateMaxMines(width, height))
-			throw new Error(`${numMines} is above the maximum amount of mines.`);
-		
-	}
 
 	public produceGrid(): Block[][] {
 		return this.grid.map((width: BlockJSON[]): Block[] =>
@@ -96,9 +69,9 @@ export class MineSweeperJSON {
 		);
 	}
 }
-
+*/
 export default class MineSweeper implements IMineSweeper {
-	public readonly grid: IGrid;
+	public readonly grid: Grid;
 	private _flagsLeft: number;
 	private _status: MineSweeperStatuses = MineSweeperStatuses.PLAYING;
 
@@ -109,7 +82,7 @@ export default class MineSweeper implements IMineSweeper {
 			this._flagsLeft = props._flagsLeft;
 		} else {
 			const {width, height, numMines} = props;
-			this.grid = new Grid(width, height, numMines);
+			this.grid = new RandomGrid(width, height, numMines);
 			this._flagsLeft = numMines;
 		}
 	}

@@ -1,15 +1,15 @@
-import Grid from '../Grid';
+import {FixedGrid, RandomGrid} from '../Grid';
 import Block, {BlockID, MineBlock, Statuses} from '../Block';
 import gameData from '../../data/';
 
 const {width, height, mines} = gameData;
 
-describe('Grid Class', () => {
+describe('RandomGrid Class', () => {
 	it('Instantiates correctly', () => {
-		const grid = new Grid();
-		const grid1 = new Grid(width.min - 1, height.min - 1, mines.min - 1);
-		const grid2 = new Grid(width.max + 1, height.max + 1, mines.max + 1);
-		const grid3 = new Grid(9, 9, 999);
+		const grid = new RandomGrid();
+		const grid1 = new RandomGrid(width.min - 1, height.min - 1, mines.min - 1);
+		const grid2 = new RandomGrid(width.max + 1, height.max + 1, mines.max + 1);
+		const grid3 = new RandomGrid(9, 9, 999);
 
 		expect(grid.width).toBe(width.initial);
 		expect(grid.height).toBe(height.initial);
@@ -26,7 +26,7 @@ describe('Grid Class', () => {
 	});
 
 	it('Creates a grid', () => {
-		const grid = new Grid(9, 9, 10);
+		const grid = new RandomGrid(9, 9, 10);
 		const findMines = (acc: MineBlock[], h: Block[]) =>
 			[...acc, ...h.filter(b => b instanceof MineBlock)];
 
@@ -37,10 +37,16 @@ describe('Grid Class', () => {
 	});
 
 	it('Can find all mine blocks', () => {
-		const grid = new Grid(9, 9, 10);
+		const grid = new RandomGrid(9, 9, 10);
 		const mines = grid.findAllMines()
 			.filter((block: MineBlock) => block instanceof MineBlock);
 
 		expect(mines.length).toBe(10);
+	});
+});
+
+describe('FixedGrid Class', () => {
+	it('Instantiates correctly', () => {
+		const rg = new RandomGrid(999,999,999);
 	});
 });
