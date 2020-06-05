@@ -1,4 +1,4 @@
-import MineSweeper, {MineSweeperStatuses} from '../MineSweeper';
+import MineSweeper, {IMineSweeper, MineSweeperStatuses} from '../MineSweeper';
 import Block, {BlockID, MineBlock, NullBlock, NumberBlock, Statuses} from '../Block';
 
 describe('MineSweeper Class', () => {
@@ -50,5 +50,21 @@ describe('MineSweeper Class', () => {
 
 		expect(ms.status()).toBe(MineSweeperStatuses.LOSE);
 		expect(blocks.length).toBe(9 * 9 - 10);
+	});
+
+	it('Will win the game', () => {
+		let ms: IMineSweeper = new MineSweeper({width: 9, height: 9, numMines: 10});
+		
+		ms.grid.
+			toArray()
+			.forEach((block: Block) => {
+				if (block instanceof MineBlock) {
+					ms = ms.flagBlock(block.id);
+				} else if (block.status !== Statuses.REVEALED) {
+					ms = ms.revealBlock(block.id);
+				}
+			});
+
+		expect(ms.status()).toBe(MineSweeperStatuses.WIN);
 	});
 });

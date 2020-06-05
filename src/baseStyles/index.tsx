@@ -3,6 +3,7 @@ type Pixel = string;
 
 interface Colors {
 	red: CSSColor;
+	green: CSSColor;
 	white: CSSColor;
 	black: {
 		base: CSSColor;
@@ -29,6 +30,7 @@ interface BaseStyles {
 const baseStyles: BaseStyles = {
 	colors: {
 		red: '#FE2E2E',
+		green: 'springgreen',
 		white: 'snow',
 		black: {
 			base: '#191919',

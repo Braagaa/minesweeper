@@ -36,4 +36,8 @@ const load = (): AppState => {
 
 const store = createStore(rootReducer, load());
 
+store.subscribe(() => {
+	//console.log(JSON.parse(JSON.stringify(store.getState().game.mineSweeper.grid.grid)))
+});
+
 export default store;

@@ -7,6 +7,13 @@ export enum Statuses {
 	QUESTIONED
 }
 
+export interface BlockJSON {
+	id: BlockID;
+	status: Statuses;
+	isMine: boolean;
+	number?: number;
+}
+
 export default abstract class Block {
     private _status: Statuses = Statuses.UNREVEALED;
 	public discriminator = 'Block';

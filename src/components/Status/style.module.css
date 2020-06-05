@@ -1,0 +1,24 @@
+:root {
+	--gray-darker: dimgray;
+	--red: #FE2E2E;
+	--green: springgreen;
+}
+
+.wrapper {
+	text-align: center;
+}
+
+.text__playing {
+	vertical-align: 4px;
+	color: var(--gray-darker);
+}
+
+.text__win {
+	vertical-align: 4px;
+	color: var(--green);
+}
+
+.text__lose {
+	vertical-align: 4px;
+	color: var(--red);
+}
