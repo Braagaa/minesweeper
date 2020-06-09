@@ -183,7 +183,7 @@ export class FixedGrid extends Grid {
 			throw new Error('Given grid is invalid');
 		if (this.grid.length < gameData.height.min || this.grid.length > gameData.height.max)
 			throw new Error(`Grid height is invalid. Must be between ${gameData.height.min} - ${gameData.height.max}`);
-		if (this.grid[0].length < gameData.width.min || this.grid.length > gameData.width.max)
+		if (this.grid[0].length < gameData.width.min || this.grid[0].length > gameData.width.max)
 			throw new Error(`Grid width is invalid. Must be between ${gameData.width.min} - ${gameData.width.max}`);
 	}
 

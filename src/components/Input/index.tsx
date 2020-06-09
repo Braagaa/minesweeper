@@ -14,13 +14,16 @@ interface Props {
 	value: number;
 	defaultValue: number;
 	writeInput: typeof writeInput;
+	inputs: InputState;
 	margin?: string;
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: AppState) => ({
+	inputs: state.inputs
+});
 const mapDispatchToProps = {writeInput};
 
-const Input: React.FC<Props> = function({text, min, max, value, defaultValue, writeInput, margin}: Props) {
+const Input: React.FC<Props> = function({text, min, max, value, defaultValue, writeInput, margin, inputs}: Props) {
 	const id = new StringBuilder(text).toLowerCase().firstWord();
 	const newText = id.capitalize().concat(':');
 
@@ -38,8 +41,9 @@ const Input: React.FC<Props> = function({text, min, max, value, defaultValue, wr
 	};
 
 	useEffect(() => {
-		writeInput(text, defaultValue.toString());
-	}, [])
+		if (!inputs[id.getValue])
+			writeInput(text, defaultValue.toString());
+	}, []);
 
 	return (
 		<Wrapper margin={margin}>

@@ -9,8 +9,8 @@ import Win from './Win';
 import Lose from './Lose';
 
 const mapStateToProps = (state: AppState) => ({
-	numMines: state.game.mineSweeper.flagsLeft(),
-	gameStatus: state.game.mineSweeper.status()
+	numMines: state.game.mineSweeper.flagsLeft,
+	gameStatus: state.game.mineSweeper.status
 });
 
 export interface Props {

@@ -1,4 +1,4 @@
-import MineSweeper, {IMineSweeper, MineSweeperStatuses} from '../MineSweeper';
+import {MineSweeper, MineSweeperStatuses, MineSweeperFixed} from '../MineSweeper';
 import Block, {BlockID, MineBlock, NullBlock, NumberBlock, Statuses} from '../Block';
 
 describe('MineSweeper Class', () => {
@@ -48,12 +48,12 @@ describe('MineSweeper Class', () => {
 			.toArray()
 			.filter((block: Block) => !(block instanceof MineBlock) && block.status === Statuses.UNREVEALED);
 
-		expect(ms.status()).toBe(MineSweeperStatuses.LOSE);
+		expect(ms.status).toBe(MineSweeperStatuses.LOSE);
 		expect(blocks.length).toBe(9 * 9 - 10);
 	});
 
 	it('Will win the game', () => {
-		let ms: IMineSweeper = new MineSweeper({width: 9, height: 9, numMines: 10});
+		let ms = new MineSweeper({width: 9, height: 9, numMines: 10});
 		
 		ms.grid.
 			toArray()
@@ -65,6 +65,14 @@ describe('MineSweeper Class', () => {
 				}
 			});
 
-		expect(ms.status()).toBe(MineSweeperStatuses.WIN);
+		expect(ms.status).toBe(MineSweeperStatuses.WIN);
+	});
+
+	it('MineSweeperFixed toJSON fromJSON', () => {
+		const ms = new MineSweeper({width: 9, height: 9, numMines: 10});
+		const json = JSON.stringify(ms.toJSON());
+		const msf = MineSweeperFixed.fromJSON(JSON.parse(json));
+
+		expect(ms.grid.grid).toEqual(msf.grid.grid);
 	});
 });

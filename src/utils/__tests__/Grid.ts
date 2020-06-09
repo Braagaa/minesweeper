@@ -48,5 +48,6 @@ describe('RandomGrid Class', () => {
 describe('FixedGrid Class', () => {
 	it('Instantiates correctly', () => {
 		const rg = new RandomGrid(999,999,999);
+		const fg = new FixedGrid(rg.grid);
 	});
 });

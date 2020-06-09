@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppState} from '../../rootReducer';
-import {IMineSweeper} from '../../utils/MineSweeper';
+import MineSweeperBase from '../../utils/MineSweeper';
 import Block from '../../utils/Block';
 
 import BlockComponent from '../Block/';
@@ -18,7 +18,7 @@ const createGridBlock = function(block: Block) {
 };
 
 interface Props {
-	mineSweeper: IMineSweeper;
+	mineSweeper: MineSweeperBase;
 }
 
 const GridComponent = function({mineSweeper}: Props) {

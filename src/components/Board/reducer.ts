@@ -6,13 +6,13 @@ import {
 	QuestionAction, 
 	UnrevealAction
 } from './actions';
-import MineSweeper, {NullMineSweeper, IMineSweeper} from '../../utils/MineSweeper';
+import MineSweeperBase, {NullMineSweeper, MineSweeper} from '../../utils/MineSweeper';
 
 type ReducerActions = CreateGameAction | RevealAction | FlagAction | QuestionAction | UnrevealAction;
 
 export interface GameState {
 	isPlaying: boolean;
-	mineSweeper: IMineSweeper;
+	mineSweeper: MineSweeperBase;
 }
 
 export const initialState: GameState = {

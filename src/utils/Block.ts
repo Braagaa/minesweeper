@@ -11,7 +11,7 @@ export interface BlockJSON {
 	id: BlockID;
 	status: Statuses;
 	isMine: boolean;
-	number?: number;
+	number: number;
 }
 
 export default abstract class Block {

@@ -1,4 +1,4 @@
-import Grid, {NullGrid, RandomGrid}  from './grid';
+import Grid, {FixedGrid, NullGrid, RandomGrid}  from './grid';
 import Block, {NullBlock, NumberBlock, MineBlock, BlockID, Statuses, BlockJSON} from './Block';
 import gameData from '../data/';
 
@@ -13,79 +13,20 @@ interface MineSweeperProps{
 	height: number;
 	numMines: number;
 }
-interface MineSweeperJSONProps {
-	mines: BlockID[];
+export interface MineSweeperJSON {
 	status: MineSweeperStatuses;
+	flagsLeft: number;
 	grid: BlockJSON[][];
 }
 
 type Props = MineSweeperProps | MineSweeper;
 
-export interface IMineSweeper {
-	readonly grid: Grid;
-	revealBlock: (id: BlockID) => IMineSweeper;
-	flagBlock: (id: BlockID) => IMineSweeper;
-	questionBlock: (id: BlockID) => IMineSweeper;
-	unrevealBlock: (id: BlockID) => IMineSweeper;
-	flagsLeft: () => number;
-	status: () => MineSweeperStatuses;
-}
-
-export class NullMineSweeper implements IMineSweeper {
-	public readonly grid: Grid = new NullGrid();
-	public revealBlock(): IMineSweeper {
-		return new NullMineSweeper();
-	}
-	public flagBlock(): IMineSweeper {
-		return new NullMineSweeper();
-	}
-	public questionBlock(): IMineSweeper {
-		return new NullMineSweeper();
-	}
-	public unrevealBlock(): IMineSweeper {
-		return new NullMineSweeper();
-	}
-	public status() {
-		return MineSweeperStatuses.PLAYING;
-	}
-	public flagsLeft(): number {
-		return 0;
-	}
-}
-/*
-export class MineSweeperJSON {
-	public readonly grid: BlockJSON[][];
-
-	public produceGrid(): Block[][] {
-		return this.grid.map((width: BlockJSON[]): Block[] =>
-			width.map((block: BlockJSON): Block => {
-				const newBlock: Block = block.isMine ?
-					new MineBlock(block.id) : block.number ?
-					new NumberBlock(block.id, block.number) :
-					new NullBlock(block.id)
-				newBlock.status = block.status;
-				return newBlock;
-			})
-		);
-	}
-}
-*/
-export default class MineSweeper implements IMineSweeper {
-	public readonly grid: Grid;
-	private _flagsLeft: number;
-	private _status: MineSweeperStatuses = MineSweeperStatuses.PLAYING;
-
-	constructor(props: Props = {width: 1, height: 1, numMines: 1}) {
-		if (props instanceof MineSweeper) {
-			this.grid = props.grid;
-			this._status = props._status;
-			this._flagsLeft = props._flagsLeft;
-		} else {
-			const {width, height, numMines} = props;
-			this.grid = new RandomGrid(width, height, numMines);
-			this._flagsLeft = numMines;
-		}
-	}
+export default abstract class MineSweeperBase {
+	constructor(
+		public readonly grid: Grid,
+		protected _flagsLeft: number,
+		protected _status: MineSweeperStatuses = MineSweeperStatuses.PLAYING,
+	){}
 
 	private loseGame(): void {
 		this.grid.findAllMines()
@@ -123,7 +64,7 @@ export default class MineSweeper implements IMineSweeper {
 		}
 	}
 
-	private changeBlock(id: BlockID, callback: (block: Block) => void): IMineSweeper {
+	private changeBlock(id: BlockID, callback: (block: Block) => void): MineSweeperBase {
 		if (this.checkPlayable()) {
 			return new MineSweeper(this);
 		}
@@ -134,7 +75,7 @@ export default class MineSweeper implements IMineSweeper {
 		return new MineSweeper(this);
 	}
 
-	public revealBlock(id: BlockID): IMineSweeper {
+	public revealBlock(id: BlockID): MineSweeperBase {
 		return this.changeBlock(id, (block: Block) => {
 			if (block instanceof MineBlock) {
 				this.loseGame();
@@ -148,7 +89,7 @@ export default class MineSweeper implements IMineSweeper {
 		});
 	}
 
-	public flagBlock(id: BlockID): IMineSweeper {
+	public flagBlock(id: BlockID): MineSweeperBase {
 		return this.changeBlock(id, (block: Block) => {
 			if (this._flagsLeft > 0 && block.status === Statuses.UNREVEALED) {
 				block.status = Statuses.FLAGGED;
@@ -158,7 +99,7 @@ export default class MineSweeper implements IMineSweeper {
 		});
 	}
 
-	public questionBlock(id: BlockID): IMineSweeper {
+	public questionBlock(id: BlockID): MineSweeperBase {
 		return this.changeBlock(id, (block: Block) => {
 			if (this._flagsLeft < this.grid.numMines && block.status === Statuses.FLAGGED) {
 				block.status = Statuses.QUESTIONED;
@@ -167,7 +108,7 @@ export default class MineSweeper implements IMineSweeper {
 		});
 	}
 
-	public unrevealBlock(id: BlockID): IMineSweeper {
+	public unrevealBlock(id: BlockID): MineSweeperBase {
 		return this.changeBlock(id, (block: Block) => {
 			if (block.status === Statuses.QUESTIONED) {
 				block.status = Statuses.UNREVEALED;
@@ -175,11 +116,75 @@ export default class MineSweeper implements IMineSweeper {
 		});
 	}
 
-	public flagsLeft(): number {
+	public toJSON(): MineSweeperJSON {
+		return {
+			flagsLeft: this._flagsLeft,
+			status: this._status,
+			grid: this.grid
+				.grid
+				.map((width: Block[]) => width.map((block: Block) => ({
+					id: block.id,
+					status: block.status,
+					isMine: block instanceof MineBlock,
+					number: block instanceof NumberBlock ? block.number : 0
+				})))
+		};
+	}
+
+	public get flagsLeft(): number {
 		return this._flagsLeft;
 	}
 
-	public status() {
+	public get status(): MineSweeperStatuses {
 		return this._status;
+	}
+}
+
+export class MineSweeper extends MineSweeperBase {
+	constructor(props: Props = {width: 1, height: 1, numMines: 1}) {
+		if (props instanceof MineSweeperBase) {
+			super(props.grid, props._flagsLeft, props._status);
+		} else {
+			const {width, height, numMines} = props;
+			super(new RandomGrid(width, height, numMines), numMines);
+		}
+	}
+}
+
+export class NullMineSweeper extends MineSweeperBase {
+	constructor() {
+		super(new NullGrid(), 0, MineSweeperStatuses.LOSE);
+	}
+}
+
+export class MineSweeperFixed extends MineSweeperBase {
+	constructor(
+		grid: Block[][], 
+		flagsLeft: number,
+		status: MineSweeperStatuses
+	) {
+		super(new FixedGrid(grid), flagsLeft, status);
+	}
+
+	public static produceGrid(grid: BlockJSON[][]): Block[][] {
+		return grid.map((width: BlockJSON[]): Block[] =>
+			width.map((block: BlockJSON): Block => {
+				const newBlock: Block = block.isMine ?
+					new MineBlock(block.id) : block.number > 0 ?
+					new NumberBlock(block.id, block.number) :
+					new NullBlock(block.id)
+				newBlock.status = block.status;
+				return newBlock;
+			})
+		);
+	}
+
+	public static fromJSON(props: MineSweeperJSON): MineSweeperFixed {
+		return new MineSweeperFixed(
+			MineSweeperFixed.produceGrid(props.grid),
+			props.flagsLeft,
+			//we can validate this if we dont want players to cheat by going to localStorage
+			props.status 
+		);
 	}
 }
