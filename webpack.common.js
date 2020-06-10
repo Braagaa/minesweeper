@@ -1,25 +1,19 @@
 const {resolve} = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-	devtool: "source-map",
 	entry: {
 		app: ["./src/index.tsx"],
 		vendor: ["react", "react-dom"]
 	},
-	output: {
-		path: resolve(__dirname, 'public'),
-		filename: 'js/[name].bundle.js'
-	},
 	resolve: {
 		extensions: [".ts", ".tsx", '.js']
 	},
-	devServer: {
-		contentBase: resolve(__dirname, 'public'),
-		hot: true,
-		port: 3000,
-		open: true,
-		publicPath: '/'
-	},
+	plugins: [
+		new HtmlWebpackPlugin({
+			template: './src/index.html'
+		})
+	],
 	module: {
 		rules: [
 			{
@@ -43,19 +37,6 @@ module.exports = {
 				exclude: /node_modules/,
 				use: [{loader: "ts-loader"}]
 			},
-			{
-				test: /.css$/i,
-				use: [
-					'style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							importLoaders: 1,
-							modules: true
-						}
-					}
-				]
-			}
 		]
 	}
 };
