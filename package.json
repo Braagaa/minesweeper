@@ -6,13 +6,17 @@
   "scripts": {
     "start": "webpack-dev-server --open --colors --config webpack.dev.js",
     "test": "jest",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack --config webpack.prod.js",
+	"heroku-postbuild": "npm run-script build"
   },
   "keywords": [
     "minesweeper",
     "mine_sweeper",
     "game"
   ],
+  "engines": {
+	"node": "12.x"
+  },
   "author": "Michael Braga",
   "license": "ISC",
   "devDependencies": {
