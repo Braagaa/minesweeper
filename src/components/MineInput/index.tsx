@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
-import Grid from '../../utils/grid';
+import Grid from '../../utils/Grid';
 import data, {GameProps} from '../../data/';
 import {writeInput} from '../Input/actions';
 

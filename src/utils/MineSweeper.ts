@@ -1,4 +1,4 @@
-import Grid, {FixedGrid, NullGrid, RandomGrid}  from './grid';
+import Grid, {FixedGrid, NullGrid, RandomGrid}  from './Grid';
 import Block, {NullBlock, NumberBlock, MineBlock, BlockID, Statuses, BlockJSON} from './Block';
 import gameData from '../data/';
 
@@ -36,7 +36,7 @@ export default abstract class MineSweeperBase {
 
 	private revealNullNumberBlocks(id: BlockID): void {
 		this.grid.findNeighboursNullNumbers(id)
-			.forEach(block => block.status = Statuses.REVEALED);
+			.forEach((block: Block)=> block.status = Statuses.REVEALED);
 	}
 
 	private checkPlayable(): boolean {
